@@ -1,0 +1,30 @@
+################################################################################
+#      Copyright (C) 2020        Sebastian Francisco Colomar Bauza             #
+#      SPDX-License-Identifier:  GPL-2.0-only                                  #
+################################################################################
+name: CI                                                                       #
+on:                                                                            #
+  push:                                                                        #
+    branches:                                                                  #
+    - main                                                                     #
+jobs:                                                                          #
+  vm:                                                                          #
+    runs-on: ubuntu-18.04                                                      #
+    steps:                                                                     #
+    - name: checkout                                                           #
+      uses: actions/checkout@v2                                                #
+    - name: run                                                                #
+      run: php -f src/index.php -S 0.0.0.0:8080                                &
+    - name: test                                                               #
+      run:                                                                     |
+        set -x                                                                 ;
+        while true                                                             ;
+          do                                                                   \
+            sleep 10                                                           ;
+            curl localhost:8080/src/index.php                                  \
+            |                                                                  \
+            grep "PHP.*phpinfo()"                                              \
+            &&                                                                 \
+            break                                                              ;
+          done                                                                 ;
+################################################################################
